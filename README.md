@@ -9,7 +9,7 @@ I run **Home Assistant** as part of my smart home security setup and needed a wa
 
 ### This app ensures that **security notifications continue to work even when the internet goes down**, because:
 - ✅ **Does NOT need internet** – All processing is done locally.
-- ✅ **Plays pre-recorded MP3 alerts instantly** – No cloud API delays.
+- ✅ **Plays pre-recorded MP3 alerts instantly** – No cloud API or TTS delays.
 - ✅ **Can be installed on multiple Raspberry Pis around the house** – Each with its own speaker for redundancy.
 - ✅ **Runs on any Raspberry Pi** – Uses very little power, especially a Zero 2W, making it ideal for UPS backup.
 
@@ -18,7 +18,7 @@ This app was developed for **use in South Africa**, where scheduled **loadsheddi
 - ❌ **Internet Service Providers (ISPs) going down during extended power outages**  
 - ❌ **Smart speakers (Google Nest / Alexa) becoming useless** unless powered by a UPS.
 - ❌ **Missed security alerts** during critical times.
-- ❌ **Cloud TTS is too slow** – You need **instant alerts**.  
+
 
 This app **solves all of that** by turning your spare **Raspberry Pis into local smart speakers** that play **instant, pre-recorded MP3 alerts** for your **security system**.  
 
