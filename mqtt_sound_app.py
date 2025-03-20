@@ -10,6 +10,10 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Set the ALSA device (force hardware sound output)
+os.environ["ALSA_CARD"] = "0"
+os.environ["AUDIODEV"] = "hw:0,0"
+
 # MQTT Configuration (with default topic)
 MQTT_BROKER = os.getenv("MQTT_BROKER", "192.168.1.15")
 MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
@@ -56,7 +60,8 @@ def play_sound(payload):
         sound_path = os.path.join(DIR_MUSIC, sound_file)
         if os.path.exists(sound_path):
             logging.info(f"Playing sound: {sound_path}")
-            subprocess.run(["mpg123", sound_path], check=False)
+            #subprocess.run(["mpg123", sound_path], check=False)
+            subprocess.run(["mpg123", "-a", "hw:0,0", sound_path], check=False)
         else:
             logging.error(f"Sound file not found: {sound_path}")
             send_telegram_message(f"Error: Sound file '{sound_file}' not found.")
