@@ -109,21 +109,17 @@ LOGGING_LEVEL=DEBUG
    python mqtt_sound_app.py
 ```
 ---
+## **🐳 Option 2: Running with Docker**  
 
-## **🐳 Option 2: Running with Docker**
-1. **Build the Docker image:**
-   ```bash
-   docker build -t mqtt-sound-app .
-   ```
-
-2. **Run the container:**
-   ```bash
-   docker run -d --name mqtt_sound_app \
+### **Run the Pre-Built Image from Docker Hub**  
+If you want to quickly get started, you can pull and run the latest pre-built image:  
+```bash
+docker run -d --name mqtt_sound_app \
    --env-file .env \
    -v /home/pi/Music:/music:ro \
-   mortyone/mqtt-sound-app
-   ```
+   mortyone/mqtt-sound-app:latest
+```
 
-## 🚀 **Deploying to k3s**
+## 🚀 **Option 3: Deploying to kubernetes / k3s**
 
 1. see [mortylabs/kubernetes](https://github.com/mortylabs/kubernetes) for k3s deployment.yaml
