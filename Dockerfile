@@ -1,0 +1,20 @@
+# Use a minimal Python image
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy application files
+COPY mqtt_sound_app.py requirements.txt ./
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Set default environment variables
+ENV DIR_MUSIC="/music"
+
+# Expose necessary ports
+EXPOSE 1883
+
+# Run the MQTT listener when the container starts
+CMD ["python", "mqtt_sound_app.py"]
