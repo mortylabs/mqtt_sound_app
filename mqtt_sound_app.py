@@ -10,16 +10,12 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Set the ALSA device (force hardware sound output)
-os.environ["ALSA_CARD"] = "0"
-os.environ["AUDIODEV"] = "hw:0,0"
-
-# MQTT Configuration (with default topic)
+# MQTT Configuration (with default values)
 MQTT_BROKER = os.getenv("MQTT_BROKER", "192.168.1.15")
 MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
 MQTT_USER = os.getenv("MQTT_USER")
 MQTT_PASS = os.getenv("MQTT_PASS")
-MQTT_TOPIC = os.getenv("MQTT_TOPIC", "home/automation/play_sound")
+MQTT_TOPIC = os.getenv("MQTT_TOPIC", "home/automation/play_sound")  # Now configurable
 
 # Telegram Configuration
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -32,8 +28,13 @@ DIR_MUSIC = os.getenv("DIR_MUSIC", "/music")
 LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "INFO").upper()
 logging.basicConfig(level=LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s")
 
-# MQTT Client Setup
-client = mqtt.Client()
+# Set ALSA as the default audio driver (Prevents JACK errors)
+os.environ["SDL_AUDIODRIVER"] = "alsa"
+os.environ["AUDIODEV"] = "hw:0,0"
+os.environ["MPG123_MODOUT"] = "alsa"
+
+# MQTT Client Setup (Fixes Deprecation Warning)
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 
 if MQTT_USER and MQTT_PASS:
     client.username_pw_set(MQTT_USER, MQTT_PASS)
@@ -51,29 +52,31 @@ def send_telegram_message(message):
 def play_sound(payload):
     """ Play sound files based on MQTT message payload """
     files = [payload.get(f"file{i}") for i in range(1, 4) if payload.get(f"file{i}")]
-    
+
     if not files:
         logging.warning("No valid sound file provided in MQTT message")
         return
-    
+
     for sound_file in files:
         sound_path = os.path.join(DIR_MUSIC, sound_file)
         if os.path.exists(sound_path):
             logging.info(f"Playing sound: {sound_path}")
-            #subprocess.run(["mpg123", sound_path], check=False)
-            subprocess.run(["mpg123", "-a", "hw:0,0", sound_path], check=False)
+            try:
+                subprocess.run(["mpg123", "-o", "alsa", "-a", "hw:0,0", sound_path], check=False)
+            except Exception as e:
+                logging.error(f"Error playing {sound_file}: {e}")
         else:
             logging.error(f"Sound file not found: {sound_path}")
             send_telegram_message(f"Error: Sound file '{sound_file}' not found.")
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(client, userdata, flags, reason_code, properties):
     """ Handle MQTT connection """
-    if rc == 0:
+    if reason_code == 0:
         logging.info(f"Connected to MQTT Broker {MQTT_BROKER}:{MQTT_PORT}")
         client.subscribe(MQTT_TOPIC)
         logging.info(f"Subscribed to MQTT topic: {MQTT_TOPIC}")
     else:
-        logging.error(f"Failed to connect to MQTT Broker: {rc}")
+        logging.error(f"Failed to connect to MQTT Broker: {reason_code}")
 
 def on_message(client, userdata, msg):
     """ Handle incoming MQTT messages """
