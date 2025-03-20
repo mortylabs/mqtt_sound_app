@@ -24,15 +24,15 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/mqtt-sound-app:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/mqtt-sound-app:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to k3s via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.K3S_SERVER }}
-          username: ${{ secrets.K3S_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            kubectl rollout restart deployment mqtt-sound-app
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#      - name: Deploy to k3s via SSH
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.K3S_SERVER }}
+#          username: ${{ secrets.K3S_USER }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          script: |
+#            kubectl rollout restart deployment mqtt-sound-app
