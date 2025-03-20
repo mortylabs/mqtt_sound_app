@@ -8,7 +8,9 @@ WORKDIR /app
 COPY mqtt_sound_app.py requirements.txt ./
 
 # Install system dependencies (sometimes required for certain Python packages)
-RUN apt-get update && apt-get install -y libffi-dev libssl-dev
+#RUN apt-get update && apt-get install -y libffi-dev libssl-dev
+# Install system dependencies (including mpg123)
+RUN apt-get update && apt-get install -y mpg123 && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt --verbose
