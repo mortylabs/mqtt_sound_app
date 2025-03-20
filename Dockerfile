@@ -20,4 +20,4 @@ ENV DIR_MUSIC="/music"
 EXPOSE 1883
 
 # Run the MQTT listener when the container starts
-CMD ["python", "mqtt_sound_app.py"]
+CMD ["python", "-u", "mqtt_sound_app.py"]
