@@ -1,5 +1,5 @@
 # Use a minimal Python image
-FROM python:3.11-slim
+FROM --platform=linux/arm64 python:3.11-slim
 
 # Set working directory
 WORKDIR /app
