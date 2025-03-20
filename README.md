@@ -122,4 +122,4 @@ docker run -d --name mqtt_sound_app \
 
 ## 🚀 **Option 3: Deploying to kubernetes / k3s**
 
-1. see [mortylabs/kubernetes](https://github.com/mortylabs/kubernetes) for k3s deployment.yaml
+see [mortylabs/kubernetes](https://github.com/mortylabs/kubernetes) for k3s deployment.yaml
